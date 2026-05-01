@@ -1,0 +1,140 @@
+@use 'sass:color';
+
+$primary-green: #408C40;
+$dark-black: #000000;
+$white: #E1E1E1;
+$light-gray: #D9D9D9;
+$green-gradient-start: #439b3e;
+$green-gradient-end: #23b11f;
+$yellow-featured: #f6f38d;
+$yellow-featured-dark: #b0ad49;
+
+$font-family-primary: 'Poppins', sans-serif;
+$font-size-lg: 36px;
+$font-size-md: 20px;
+$font-size-sm: 16px;
+$font-weight-regular: 400;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// ============= HEADER =============
+.site-header {
+    position: relative;
+    width: 100%;
+    height: 114px;
+    overflow: hidden;
+    font-family: $font-family-primary;
+
+
+
+    &__background {
+        position: absolute;
+        inset: 0;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &__inner {
+        position: relative;
+        width: 100%;
+        max-width: 1920px;
+        height: 114px;
+        margin: 0 auto;
+    }
+
+    &__logo {
+        position: absolute;
+        left: 318px;
+        top: 6px;
+        width: 271px;
+        height: 105px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    &__nav {
+        position: relative;
+        width: 100%;
+        height: 114px;
+    }
+
+    &__link {
+        position: absolute;
+        top: 49px;
+        color: $white;
+        font-size: 20px;
+        font-weight: $font-weight-semibold;
+        text-decoration: none;
+        text-transform: uppercase;
+        text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+        white-space: nowrap;
+        transition: opacity 0.2s ease;
+
+        &:hover {
+            opacity: 0.85;
+        }
+    }
+
+    &__link--aluguel {
+        left: calc(41.67% + 75px);
+    }
+
+    &__link--venda {
+        left: calc(50% + 22px);
+    }
+
+    &__link--anuncie {
+        left: calc(58.33% - 49px);
+    }
+
+    &__link--contato {
+        left: calc(66.67% - 99px);
+    }
+
+    &__link--area {
+        left: calc(75% - 140px);
+    }
+
+    &__socials {
+        position: absolute;
+        top: 38px;
+        right: 160px;
+        display: flex;
+        gap: 22px;
+    }
+
+    &__social-button {
+        width: 45px;
+        height: 45px;
+        border-radius: 30px;
+        background: $white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+        transition: transform 0.2s ease;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        &:hover {
+            transform: translateY(-1px);
+        }
+    }
+
+    &__social-button--facebook {
+        box-shadow: 0 4px 2px rgba(0, 0, 0, 0.25);
+    }
+}

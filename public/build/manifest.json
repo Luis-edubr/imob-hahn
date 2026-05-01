@@ -9,7 +9,7 @@
     "isEntry": true
   },
   "resources/css/app.scss": {
-    "file": "assets/app-CmoBr_p1.css",
+    "file": "assets/app-COpS8LDu.css",
     "name": "app",
     "names": [
       "app.css"
@@ -17,8 +17,26 @@
     "src": "resources/css/app.scss",
     "isEntry": true
   },
+  "resources/css/footer.scss": {
+    "file": "assets/footer-BpjsNdet.css",
+    "name": "footer",
+    "names": [
+      "footer.css"
+    ],
+    "src": "resources/css/footer.scss",
+    "isEntry": true
+  },
+  "resources/css/header.scss": {
+    "file": "assets/header-DmcAfN_K.css",
+    "name": "header",
+    "names": [
+      "header.css"
+    ],
+    "src": "resources/css/header.scss",
+    "isEntry": true
+  },
   "resources/js/app.js": {
-    "file": "assets/app-BLPU2IeE.js",
+    "file": "assets/app-DBquQtRF.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
