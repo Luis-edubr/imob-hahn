@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AnuncieController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -14,6 +15,8 @@ Route::post('/contato', [ContactController::class, 'store'])->name('contact.stor
 
 Route::get('/anuncie', [AnuncieController::class, 'show'])->name('anuncie.show');
 Route::post('/anuncie', [AnuncieController::class, 'store'])->name('anuncie.store');
+
+Route::get('/busca', [SearchController::class, 'index'])->name('search.index');
 
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
