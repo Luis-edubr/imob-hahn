@@ -1,0 +1,444 @@
+/* Anuncie Page Stylesheet */
+
+$primary-green: #408c40;
+$primary-green-light: #26aa26;
+$accent-yellow: #f6f38d;
+$gray-light: #e1e1e1;
+$gray-dark: #d9d9d9;
+$white: #ffffff;
+$black: #000000;
+$text-muted: rgba(0, 0, 0, 0.6);
+$dark-muted: rgba(0, 0, 0, 0.25);
+
+$font-family-primary: 'Poppins', sans-serif;
+$font-weight-regular: 400;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+$spacing-unit: 8px;
+
+.anuncie-page {
+    width: 100%;
+    background-color: $white;
+
+    &__header {
+        background-color: $gray-dark;
+        padding: 40px 329px;
+        margin-bottom: 40px;
+
+        @media (max-width: 1024px) {
+            padding: 30px 60px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            padding: 25px 20px;
+            margin-bottom: 25px;
+        }
+    }
+
+    &__title {
+        font-family: $font-family-primary;
+        font-size: 36px;
+        font-weight: $font-weight-bold;
+        line-height: 1;
+        color: $black;
+        text-shadow: 0px 4px 5px $dark-muted;
+        background: linear-gradient(to top, $primary-green 20%, $primary-green-light 113.3%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin: 0;
+        white-space: nowrap;
+
+        @media (max-width: 768px) {
+            font-size: 28px;
+            white-space: normal;
+        }
+    }
+
+    &__intro {
+        padding: 40px 329px;
+        margin-bottom: 40px;
+
+        @media (max-width: 1024px) {
+            padding: 30px 60px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+    }
+
+    &__intro-text {
+        font-family: $font-family-primary;
+        font-size: 16px;
+        font-weight: $font-weight-regular;
+        line-height: 1.6;
+        color: $black;
+        margin: 0 0 12px 0;
+        max-width: 1231px;
+    }
+
+    &__intro-note {
+        font-family: $font-family-primary;
+        font-size: 16px;
+        font-weight: $font-weight-regular;
+        line-height: 1;
+        color: $black;
+        margin: 0;
+    }
+}
+
+.anuncie-form {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 0 329px 60px 329px;
+
+    @media (max-width: 1024px) {
+        gap: 30px;
+        padding: 0 60px 40px 60px;
+    }
+
+    @media (max-width: 768px) {
+        gap: 20px;
+        padding: 0 20px 30px 20px;
+    }
+}
+
+.form-section {
+    border-radius: 12px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+
+    &--green {
+        border-radius: 0.75rem;
+        background: linear-gradient(to bottom right, #26AA26 0%, #408C40 50%) bottom right / 50% 50% no-repeat, linear-gradient(to bottom left, #26AA26 0%, #408C40 50%) bottom left / 50% 50% no-repeat, linear-gradient(to top left, #26AA26 0%, #408C40 50%) top left / 50% 50% no-repeat, linear-gradient(to top right, #26AA26 0%, #408C40 50%) top right / 50% 50% no-repeat; 
+    }
+
+    @media (max-width: 768px) {
+        padding: 30px 20px;
+    }
+
+    &__title {
+        font-family: $font-family-primary;
+        font-size: 20px;
+        font-weight: $font-weight-semibold;
+        line-height: 1;
+        color: $accent-yellow;
+        margin: 0 0 16px 0;
+        text-shadow: 0px 4px 4px $dark-muted;
+    }
+
+    &__divider {
+        height: 2px;
+        width: 80px;
+        background: linear-gradient(to right, $primary-green-light, $primary-green);
+        margin-bottom: 24px;
+    }
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 24px;
+
+    &--3cols {
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 24px;
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+/* Dados do imóvel: two rows layout */
+.dados-imovel {
+    display: grid;
+    gap: 20px;
+
+    /* each row splits into two equal columns */
+    &__row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        align-items: start;
+
+        @media (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__col {
+        &--left {
+            display: block;
+        }
+
+        &--right {
+            display: block;
+        }
+    }
+
+    /* row1 right: suites + bbq side-by-side */
+    .dados-imovel__small-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        align-items: start;
+    }
+
+    /* row2 left: split into two columns, each stacking two selects */
+    .dados-imovel__left-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .dados-imovel__stack {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+
+/* small select variant: fill available column width and be taller */
+.form-select--small {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 16px;
+    min-height: 50px;
+    box-sizing: border-box;
+}
+
+/* ensure property_type select (full) fills its column */
+.dados-imovel__col--left .form-select:not(.form-select--small) {
+    width: 100%;
+}
+
+/* textarea sizing inside dados-imovel */
+.dados-imovel .form-textarea {
+    min-height: 200px;
+}
+
+/* responsive tweaks */
+@media (max-width: 768px) {
+    .dados-imovel .dados-imovel__small-row,
+    .dados-imovel .dados-imovel__left-split {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    &--full {
+        grid-column: 1 / -1;
+    }
+
+    @media (max-width: 768px) {
+        gap: 5px;
+    }
+}
+
+.form-label {
+    font-family: $font-family-primary;
+    font-size: 16px;
+    font-weight: $font-weight-semibold;
+    line-height: 1;
+    color: $black;
+    text-shadow: 0px 4px 4px $dark-muted;
+
+    &--light {
+        color: $gray-light;
+    }
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    background-color: $gray-light;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-family: $font-family-primary;
+    font-size: 16px;
+    font-weight: $font-weight-regular;
+    color: $black;
+    transition: all 0.3s ease;
+
+    &::placeholder {
+        color: $text-muted;
+    }
+
+    &:focus {
+        outline: none;
+        background-color: adjust-color($gray-light, $lightness: -5%);
+        box-shadow: 0 0 0 3px rgba($primary-green, 0.1);
+    }
+
+    &.is-invalid {
+        background-color: #fee;
+        border: 1px solid #f33;
+
+        &:focus {
+            box-shadow: 0 0 0 3px rgba(#f33, 0.1);
+        }
+    }
+}
+
+.form-input {
+    height: 50px;
+}
+
+.form-select {
+    appearance: none;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23333' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 40px;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}
+
+.form-select-wrapper {
+    position: relative;
+    display: block;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 182px;
+    padding: 16px;
+
+    /* when textarea sits in the right column, make it taller to match design */
+    .dados-imovel & {
+        min-height: 260px;
+    }
+
+    @media (max-width: 768px) {
+        min-height: 150px;
+    }
+}
+
+.form-error {
+    font-family: $font-family-primary;
+    font-size: 12px;
+    color: #d32f2f;
+    font-weight: $font-weight-regular;
+    margin-top: -2px;
+}
+
+.form-authorization {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 0 329px;
+    margin-bottom: 24px;
+
+    @media (max-width: 1024px) {
+        padding: 0 60px;
+    }
+
+    @media (max-width: 768px) {
+        padding: 0 20px;
+    }
+}
+
+.form-checkbox {
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+    min-height: 17px;
+    margin-top: 2px;
+    border: 2px solid $black;
+    border-radius: 3px;
+    cursor: pointer;
+    accent-color: $primary-green;
+
+    &:checked {
+        background-color: $primary-green;
+        border-color: $primary-green;
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba($primary-green, 0.2);
+    }
+}
+
+.form-checkbox-label {
+    font-family: $font-family-primary;
+    font-size: 16px;
+    font-weight: $font-weight-regular;
+    line-height: 1.5;
+    color: $black;
+    cursor: pointer;
+}
+
+.form-submit-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    padding: 0 329px;
+
+    @media (max-width: 1024px) {
+        padding: 0 60px;
+    }
+
+    @media (max-width: 768px) {
+        padding: 0 20px;
+    }
+}
+
+.form-submit {
+    background: linear-gradient(40.82deg, $primary-green 42.96%, $primary-green-light 113.3%);
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-family: $font-family-primary;
+    font-size: 20px;
+    font-weight: $font-weight-semibold;
+    color: $white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    height: 41px;
+    min-width: 151px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    @media (max-width: 768px) {
+        font-size: 16px;
+        padding: 10px 20px;
+        height: 36px;
+        min-width: 120px;
+    }
+}

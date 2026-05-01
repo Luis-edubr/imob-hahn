@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\AnuncieController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -10,6 +11,9 @@ Route::get('/', function () {
 
 Route::get('/contato', [ContactController::class, 'show'])->name('contact.show');
 Route::post('/contato', [ContactController::class, 'store'])->name('contact.store');
+
+Route::get('/anuncie', [AnuncieController::class, 'show'])->name('anuncie.show');
+Route::post('/anuncie', [AnuncieController::class, 'store'])->name('anuncie.store');
 
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', function () {

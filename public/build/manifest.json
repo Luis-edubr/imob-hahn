@@ -1,6 +1,15 @@
 {
+  "resources/css/anuncie.scss": {
+    "file": "assets/anuncie-B75izmdr.css",
+    "name": "anuncie",
+    "names": [
+      "anuncie.css"
+    ],
+    "src": "resources/css/anuncie.scss",
+    "isEntry": true
+  },
   "resources/css/app.css": {
-    "file": "assets/app-B8IyWll5.css",
+    "file": "assets/app-ByuPPfiR.css",
     "name": "app",
     "names": [
       "app.css"
@@ -45,7 +54,7 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-31C5yIAU.js",
+    "file": "assets/app-BkscvmBf.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
