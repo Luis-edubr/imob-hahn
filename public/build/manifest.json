@@ -17,6 +17,15 @@
     "src": "resources/css/app.scss",
     "isEntry": true
   },
+  "resources/css/contact.scss": {
+    "file": "assets/contact-MIvMsARB.css",
+    "name": "contact",
+    "names": [
+      "contact.css"
+    ],
+    "src": "resources/css/contact.scss",
+    "isEntry": true
+  },
   "resources/css/footer.scss": {
     "file": "assets/footer-BpjsNdet.css",
     "name": "footer",
@@ -36,7 +45,7 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-DBquQtRF.js",
+    "file": "assets/app-31C5yIAU.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true

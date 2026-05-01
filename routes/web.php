@@ -1,11 +1,15 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/contato', [ContactController::class, 'show'])->name('contact.show');
+Route::post('/contato', [ContactController::class, 'store'])->name('contact.store');
 
 Route::prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
