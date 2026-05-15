@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <a href="{{ route('admin.properties.index') }}" class="block bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg border border-transparent hover:border-indigo-300 transition">
                     <div class="p-6">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Imóveis</h3>
@@ -19,6 +19,13 @@
                     <div class="p-6">
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Terrenos</h3>
                         <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Gerencie terrenos com fluxo próprio dentro do CMS.</p>
+                    </div>
+                </a>
+
+                <a href="{{ route('admin.gallery.index') }}" class="block bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg border border-transparent hover:border-indigo-300 transition">
+                    <div class="p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">Galeria</h3>
+                        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Visualize as imagens vinculadas por imóvel e terreno.</p>
                     </div>
                 </a>
             </div>

@@ -21,6 +21,9 @@
                     <x-nav-link :href="route('admin.lands.index')" :active="request()->routeIs('admin.lands.*')">
                         {{ __('Terrenos') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.gallery.index')" :active="request()->routeIs('admin.gallery.*')">
+                        {{ __('Galeria') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -81,6 +84,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('admin.lands.index')" :active="request()->routeIs('admin.lands.*')">
                 {{ __('Terrenos') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('admin.gallery.index')" :active="request()->routeIs('admin.gallery.*')">
+                {{ __('Galeria') }}
             </x-responsive-nav-link>
         </div>
 

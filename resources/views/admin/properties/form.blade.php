@@ -1,6 +1,7 @@
 @php
     $isEdit = $property->exists;
     $action = $isEdit ? route($module['update_route'], $property) : route($module['store_route']);
+    $mediaAssetsById = $mediaAssets->keyBy('id');
 
     $moneyValue = function (string $field) use ($property) {
         $oldValue = old($field);
@@ -11,14 +12,14 @@
 
         $amount = $property->{$field};
 
-        return $amount !== null ? number_format($amount / 100, 2, ',', '.') : '';
+        return $amount !== null ? (string) ((int) round($amount / 100)) : '';
     };
 
     $imageRows = old('images');
 
     if ($imageRows === null) {
         $imageRows = $property->images->map(fn ($image) => [
-            'path' => $image->path,
+            'media_asset_id' => $image->media_asset_id,
             'alt_text' => $image->alt_text,
             'sort_order' => $image->sort_order,
             'is_cover' => (bool) $image->is_cover,
@@ -26,7 +27,7 @@
     }
 
     if (empty($imageRows)) {
-        $imageRows = [['path' => '', 'alt_text' => '', 'sort_order' => 0, 'is_cover' => false]];
+        $imageRows = [['media_asset_id' => null, 'alt_text' => '', 'sort_order' => 0, 'is_cover' => false]];
     }
 
     $selectedAmenities = collect(old('amenity_ids', $property->amenities->pluck('id')->all()))
@@ -62,7 +63,7 @@
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ $action }}" class="space-y-8">
+                    <form method="POST" action="{{ $action }}" enctype="multipart/form-data" class="space-y-8">
                         @csrf
                         @if ($isEdit)
                             @method('PUT')
@@ -133,23 +134,23 @@
                             <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                                 <div>
                                     <label class="block text-sm font-medium mb-1" for="price">Preço principal</label>
-                                    <input id="price" name="price" type="text" value="{{ $moneyValue('price') }}" class="w-full rounded-md border-gray-300 js-only-digits" inputmode="numeric" placeholder="Ex: 50000000">
+                                    <input id="price" name="price" type="text" value="{{ $moneyValue('price') }}" class="w-full rounded-md border-gray-300 js-only-digits" inputmode="numeric" placeholder="Ex: 500000">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-1" for="price_sale">Valor de venda</label>
-                                    <input id="price_sale" name="price_sale" type="text" value="{{ $moneyValue('price_sale') }}" class="w-full rounded-md border-gray-300 js-only-digits" inputmode="numeric" placeholder="Ex: 50000000">
+                                    <input id="price_sale" name="price_sale" type="text" value="{{ $moneyValue('price_sale') }}" class="w-full rounded-md border-gray-300 js-only-digits" inputmode="numeric" placeholder="Ex: 500000">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-1" for="price_rent">Valor de aluguel</label>
-                                    <input id="price_rent" name="price_rent" type="text" value="{{ $moneyValue('price_rent') }}" class="w-full rounded-md border-gray-300 js-only-digits" inputmode="numeric" placeholder="Ex: 180000">
+                                    <input id="price_rent" name="price_rent" type="text" value="{{ $moneyValue('price_rent') }}" class="w-full rounded-md border-gray-300 js-only-digits" inputmode="numeric" placeholder="Ex: 1800">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-1" for="condo_fee">Condomínio</label>
-                                    <input id="condo_fee" name="condo_fee" type="text" value="{{ $moneyValue('condo_fee') }}" class="w-full rounded-md border-gray-300 js-only-digits" inputmode="numeric" placeholder="Ex: 35000">
+                                    <input id="condo_fee" name="condo_fee" type="text" value="{{ $moneyValue('condo_fee') }}" class="w-full rounded-md border-gray-300 js-only-digits" inputmode="numeric" placeholder="Ex: 350">
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium mb-1" for="iptu_value">IPTU</label>
-                                    <input id="iptu_value" name="iptu_value" type="text" value="{{ $moneyValue('iptu_value') }}" class="w-full rounded-md border-gray-300 js-only-digits" inputmode="numeric" placeholder="Ex: 120000">
+                                    <input id="iptu_value" name="iptu_value" type="text" value="{{ $moneyValue('iptu_value') }}" class="w-full rounded-md border-gray-300 js-only-digits" inputmode="numeric" placeholder="Ex: 1200">
                                 </div>
                             </div>
                         </section>
@@ -214,15 +215,32 @@
                                     <button type="button" id="add-image-row" class="inline-flex items-center px-3 py-2 rounded-md text-xs font-semibold text-indigo-700 bg-indigo-50 hover:bg-indigo-100">Adicionar imagem</button>
                                 </div>
                                 <p class="mb-3 text-xs text-gray-500">Selecione exatamente uma imagem como capa.</p>
+                                <p class="mb-3 text-xs text-gray-500">Cada linha deve usar uma imagem da biblioteca OU upload de novo arquivo (jpg, png, webp, avif - até 10MB).</p>
 
                                 <div id="images-rows" class="space-y-3">
                                     @foreach ($imageRows as $index => $image)
+                                        @php
+                                            $selectedMediaAsset = !empty($image['media_asset_id']) ? $mediaAssetsById->get((int) $image['media_asset_id']) : null;
+                                        @endphp
                                         <div class="grid grid-cols-1 md:grid-cols-12 gap-3 image-row rounded-md border border-gray-200 p-3">
-                                            <div class="md:col-span-5">
-                                                <label class="block text-xs font-medium mb-1">Caminho</label>
-                                                <input type="text" name="images[{{ $index }}][path]" value="{{ $image['path'] ?? '' }}" class="w-full rounded-md border-gray-300" placeholder="imoveis/foto.jpg">
-                                            </div>
                                             <div class="md:col-span-4">
+                                                <label class="block text-xs font-medium mb-1">Biblioteca</label>
+                                                <select name="images[{{ $index }}][media_asset_id]" class="w-full rounded-md border-gray-300 js-media-select">
+                                                    <option value="">Selecionar imagem existente</option>
+                                                    @foreach ($mediaAssets as $mediaAsset)
+                                                        <option value="{{ $mediaAsset->id }}" @selected((string) ($image['media_asset_id'] ?? '') === (string) $mediaAsset->id)>
+                                                            #{{ $mediaAsset->id }} - {{ \Illuminate\Support\Str::limit($mediaAsset->original_name, 40) }} ({{ $mediaAsset->width }}x{{ $mediaAsset->height }})
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+
+                                            <div class="md:col-span-3">
+                                                <label class="block text-xs font-medium mb-1">Upload</label>
+                                                <input type="file" name="images[{{ $index }}][file]" accept=".jpg,.jpeg,.png,.webp,.avif,image/jpeg,image/png,image/webp,image/avif" class="w-full rounded-md border-gray-300 js-upload-input">
+                                            </div>
+
+                                            <div class="md:col-span-2">
                                                 <label class="block text-xs font-medium mb-1">Descrição</label>
                                                 <input type="text" name="images[{{ $index }}][alt_text]" value="{{ $image['alt_text'] ?? '' }}" class="w-full rounded-md border-gray-300" placeholder="Fachada">
                                             </div>
@@ -236,6 +254,12 @@
                                             <div class="md:col-span-1 flex items-end justify-end">
                                                 <button type="button" class="remove-image-row inline-flex items-center px-3 py-2 rounded-md text-xs font-semibold text-red-700 bg-red-50 hover:bg-red-100">Remover</button>
                                             </div>
+
+                                            @if ($selectedMediaAsset)
+                                                <div class="md:col-span-12">
+                                                    <img src="{{ $selectedMediaAsset->url }}" alt="{{ $selectedMediaAsset->original_name }}" class="h-16 rounded border border-gray-200">
+                                                </div>
+                                            @endif
                                         </div>
                                     @endforeach
                                 </div>
@@ -277,6 +301,8 @@
         (function () {
             const rowsContainer = document.getElementById('images-rows');
             const addButton = document.getElementById('add-image-row');
+            const mediaSelectTemplate = rowsContainer.querySelector('.js-media-select')?.innerHTML
+                ?? '<option value=\"\">Selecionar imagem existente</option>';
 
             if (!rowsContainer || !addButton) {
                 return;
@@ -321,11 +347,17 @@
                 row.className = 'grid grid-cols-1 md:grid-cols-12 gap-3 image-row rounded-md border border-gray-200 p-3';
 
                 row.innerHTML = `
-                    <div class="md:col-span-5">
-                        <label class="block text-xs font-medium mb-1">Caminho</label>
-                        <input type="text" name="images[${index}][path]" class="w-full rounded-md border-gray-300" placeholder="imoveis/foto.jpg">
-                    </div>
                     <div class="md:col-span-4">
+                        <label class="block text-xs font-medium mb-1">Biblioteca</label>
+                        <select name="images[${index}][media_asset_id]" class="w-full rounded-md border-gray-300 js-media-select">
+                            ${mediaSelectTemplate}
+                        </select>
+                    </div>
+                    <div class="md:col-span-3">
+                        <label class="block text-xs font-medium mb-1">Upload</label>
+                        <input type="file" name="images[${index}][file]" accept=".jpg,.jpeg,.png,.webp,.avif,image/jpeg,image/png,image/webp,image/avif" class="w-full rounded-md border-gray-300 js-upload-input">
+                    </div>
+                    <div class="md:col-span-2">
                         <label class="block text-xs font-medium mb-1">Descrição</label>
                         <input type="text" name="images[${index}][alt_text]" class="w-full rounded-md border-gray-300" placeholder="Fachada">
                     </div>
@@ -362,6 +394,24 @@
 
             rowsContainer.addEventListener('change', function (event) {
                 if (!event.target.classList.contains('js-cover-checkbox')) {
+                    if (event.target.classList.contains('js-media-select')) {
+                        const row = event.target.closest('.image-row');
+                        const uploadInput = row?.querySelector('.js-upload-input');
+
+                        if (event.target.value && uploadInput) {
+                            uploadInput.value = '';
+                        }
+                    }
+
+                    if (event.target.classList.contains('js-upload-input')) {
+                        const row = event.target.closest('.image-row');
+                        const mediaSelect = row?.querySelector('.js-media-select');
+
+                        if (event.target.files?.length && mediaSelect) {
+                            mediaSelect.value = '';
+                        }
+                    }
+
                     return;
                 }
 

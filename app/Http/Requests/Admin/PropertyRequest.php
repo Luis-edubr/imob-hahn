@@ -77,8 +77,9 @@ class PropertyRequest extends FormRequest
             'amenity_ids' => ['nullable', 'array'],
             'amenity_ids.*' => ['integer', 'exists:amenities,id'],
 
-            'images' => ['required', 'array', 'min:1'],
-            'images.*.path' => ['required_with:images', 'string', 'max:255'],
+            'images' => ['required', 'array', 'min:1', 'max:20'],
+            'images.*.media_asset_id' => ['nullable', 'integer', 'exists:media_assets,id'],
+            'images.*.file' => ['nullable', 'file', 'max:10240', 'mimes:jpeg,jpg,png,webp,avif'],
             'images.*.alt_text' => ['nullable', 'string', 'max:255'],
             'images.*.sort_order' => ['nullable', 'integer', 'min:0', 'max:65535'],
             'images.*.is_cover' => ['nullable', 'boolean'],
@@ -89,6 +90,7 @@ class PropertyRequest extends FormRequest
     {
         $validator->after(function ($validator) {
             $images = $this->input('images', []);
+            $imageFiles = $this->file('images', []);
             $coverCount = collect($images)->filter(fn (array $image) => !empty($image['is_cover']))->count();
 
             if ($coverCount === 0) {
@@ -97,6 +99,19 @@ class PropertyRequest extends FormRequest
 
             if ($coverCount > 1) {
                 $validator->errors()->add('images', 'Apenas uma imagem pode ser marcada como capa.');
+            }
+
+            foreach ($images as $index => $image) {
+                $hasAsset = filled($image['media_asset_id'] ?? null);
+                $hasFile = isset($imageFiles[$index]['file']) && $imageFiles[$index]['file'];
+
+                if (!$hasAsset && !$hasFile) {
+                    $validator->errors()->add("images.$index.file", 'Selecione uma imagem existente ou envie um novo arquivo.');
+                }
+
+                if ($hasAsset && $hasFile) {
+                    $validator->errors()->add("images.$index.file", 'Use apenas uma origem por linha: biblioteca ou upload.');
+                }
             }
         });
     }
@@ -125,14 +140,12 @@ class PropertyRequest extends FormRequest
         $images = collect($this->input('images', []))
             ->map(function ($image) {
                 return [
-                    'path' => isset($image['path']) ? trim((string) $image['path']) : null,
+                    'media_asset_id' => isset($image['media_asset_id']) && $image['media_asset_id'] !== '' ? (int) $image['media_asset_id'] : null,
                     'alt_text' => isset($image['alt_text']) ? trim((string) $image['alt_text']) : null,
                     'sort_order' => isset($image['sort_order']) && $image['sort_order'] !== '' ? (int) $image['sort_order'] : 0,
                     'is_cover' => filter_var($image['is_cover'] ?? false, FILTER_VALIDATE_BOOLEAN),
                 ];
             })
-            ->filter(fn (array $image) => filled($image['path']))
-            ->values()
             ->all();
 
         $payload['images'] = $images;

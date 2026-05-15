@@ -14,7 +14,7 @@ class SearchController extends Controller
     {
         $properties = Property::query()
             ->published()
-            ->with('images')
+            ->with('images.mediaAsset')
             ->when($request->filled('transaction_type'), fn ($query) => $query->where('transaction_type', (string) $request->input('transaction_type')))
             ->when($request->filled('property_type'), fn ($query) => $query->where('property_type', (string) $request->input('property_type')))
             ->when($request->filled('city'), fn ($query) => $query->where('city', (string) $request->input('city')))

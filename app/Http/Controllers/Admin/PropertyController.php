@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\PropertyRequest;
 use App\Models\Amenity;
+use App\Models\MediaAsset;
 use App\Models\Property;
+use App\Services\ImageService;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\RedirectResponse;
 
 class PropertyController extends Controller
@@ -103,12 +106,13 @@ class PropertyController extends Controller
             $property->property_type = 'terreno';
         }
 
-        $property->load(['amenities:id', 'images']);
+        $property->load(['amenities:id', 'images.mediaAsset']);
 
         return view('admin.properties.form', [
             'property' => $property,
             'module' => $this->moduleMeta($onlyLands),
             'amenities' => Amenity::query()->active()->orderBy('name')->get(['id', 'name']),
+            'mediaAssets' => MediaAsset::query()->latest()->limit(200)->get(),
             'typeOptions' => $onlyLands
                 ? ['terreno' => Property::propertyTypeOptions()['terreno']]
                 : collect(Property::propertyTypeOptions())->except('terreno')->all(),
@@ -121,7 +125,7 @@ class PropertyController extends Controller
     {
         $this->guardModuleProperty($property, $onlyLands);
 
-        $property->load(['amenities:id,name', 'images']);
+        $property->load(['amenities:id,name', 'images.mediaAsset']);
 
         return view('admin.properties.show', [
             'property' => $property,
@@ -134,6 +138,7 @@ class PropertyController extends Controller
         $this->guardModuleProperty($property, $onlyLands);
 
         $validated = $request->validated();
+        $imageFiles = $request->file('images', []);
 
         $amenityIds = $validated['amenity_ids'] ?? [];
         $images = $validated['images'] ?? [];
@@ -144,26 +149,44 @@ class PropertyController extends Controller
             $validated['property_type'] = 'terreno';
         }
 
-        $property->fill($validated);
-        $property->save();
-
-        $property->amenities()->sync($amenityIds);
-
-        $property->images()->delete();
+        $imageService = app(ImageService::class);
+        $imagePayloads = [];
 
         if (! empty($images)) {
             foreach ($images as $index => $image) {
                 $isCover = (bool) ($image['is_cover'] ?? false);
+                $mediaAsset = null;
+                $uploadedFile = $imageFiles[$index]['file'] ?? null;
 
-                $property->images()->create([
-                    'disk' => 'public',
-                    'path' => $image['path'],
+                if ($uploadedFile) {
+                    $mediaAsset = $imageService->upload($uploadedFile);
+                } elseif (! empty($image['media_asset_id'])) {
+                    $mediaAsset = MediaAsset::query()->findOrFail((int) $image['media_asset_id']);
+                }
+
+                $imagePayloads[] = [
+                    'media_asset_id' => $mediaAsset?->id,
+                    'disk' => $mediaAsset?->disk ?? 'local',
+                    'path' => $mediaAsset?->path ?? '',
                     'alt_text' => $image['alt_text'] ?? null,
                     'sort_order' => $image['sort_order'] ?? $index,
                     'is_cover' => $isCover,
-                ]);
+                ];
             }
         }
+
+        DB::transaction(function () use ($property, $validated, $amenityIds, $imagePayloads): void {
+            $property->fill($validated);
+            $property->save();
+
+            $property->amenities()->sync($amenityIds);
+
+            $property->images()->delete();
+
+            if (! empty($imagePayloads)) {
+                $property->images()->createMany($imagePayloads);
+            }
+        });
 
         $mainImage = $property->main_image;
         $property->forceFill([

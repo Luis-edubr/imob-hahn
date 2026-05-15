@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\PropertyController;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AnuncieController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +20,8 @@ Route::get('/anuncie', [AnuncieController::class, 'show'])->name('anuncie.show')
 Route::post('/anuncie', [AnuncieController::class, 'store'])->name('anuncie.store');
 
 Route::get('/busca', [SearchController::class, 'index'])->name('search.index');
+Route::get('/media/{mediaAsset}', [MediaController::class, 'show'])->middleware('signed')->name('media.show');
+Route::get('/media/{mediaAsset}/download', [MediaController::class, 'download'])->middleware('signed')->name('media.download');
 
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth', 'verified'])->group(function () {
@@ -43,6 +47,11 @@ Route::prefix('admin')->group(function () {
             Route::get('/{property}/editar', [PropertyController::class, 'landsEdit'])->name('edit');
             Route::match(['put', 'patch'], '/{property}', [PropertyController::class, 'landsUpdate'])->name('update');
             Route::delete('/{property}', [PropertyController::class, 'landsDestroy'])->name('destroy');
+        });
+
+        Route::prefix('galeria')->name('admin.gallery.')->group(function () {
+            Route::get('/', [GalleryController::class, 'index'])->name('index');
+            Route::get('/{property}', [GalleryController::class, 'show'])->name('show');
         });
     });
 

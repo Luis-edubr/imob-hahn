@@ -89,7 +89,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 @foreach ($property->images as $image)
                                     <div class="rounded-lg border border-gray-200 overflow-hidden">
-                                        <img src="{{ $image->url }}" alt="{{ $image->alt_text ?: $property->title }}" class="w-full h-40 object-cover">
+                                        <img src="{{ $image->url ?? 'https://placehold.co/600x400?text=Imagem' }}" alt="{{ $image->alt_text ?: $property->title }}" class="w-full h-40 object-cover">
                                         <div class="p-3 text-xs text-gray-600">
                                             <p><span class="font-semibold">Ordem:</span> {{ $image->sort_order }}</p>
                                             <p><span class="font-semibold">Capa:</span> {{ $image->is_cover ? 'Sim' : 'Não' }}</p>
