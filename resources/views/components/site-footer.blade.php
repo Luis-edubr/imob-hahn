@@ -70,7 +70,7 @@
     <!-- Bottom section (footer bar) -->
     <div class="site-footer__bottom-bar">
         <div class="site-footer__logo">
-            <img src="https://www.figma.com/api/mcp/asset/01a06d40-d701-48f3-a934-bc04abd1bdfa" alt="Imobiliária Hahn">
+            <img src="{{ asset('logo.png') }}" alt="Imobiliária Hahn">
         </div>
         <div class="site-footer__copyright">
             <p>Todos os Direitos Reservados | Copyright © 2023</p>

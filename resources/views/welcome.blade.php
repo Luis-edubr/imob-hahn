@@ -5,7 +5,7 @@
         <!-- HERO & SEARCH -->
         <section class="hero">
             <div class="hero__bg">
-                <img src="https://www.figma.com/api/mcp/asset/eff0a503-16be-4bc1-8a97-677668fce1fc" alt="Hero background" class="hero__img">
+                <img src="{{ asset('home/hero-bg.png') }}" alt="Hero background" class="hero__img">
                 <div class="hero__veil"></div>
             </div>
 
