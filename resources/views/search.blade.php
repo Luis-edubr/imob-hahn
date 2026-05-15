@@ -6,7 +6,7 @@
     <div class="search-page__header">
         <div class="search-page__info-section">
             <div class="search-page__count">
-                <span class="search-page__count-text">{{ $totalCount }} imóveis encontrados - {{ $currentPage }} de {{ $totalPages }} páginas</span>
+                <span class="search-page__count-text">{{ $properties->total() }} imóveis encontrados - {{ $properties->currentPage() }} de {{ $properties->lastPage() }} páginas</span>
             </div>
 
             <div class="search-page__cta-button">
@@ -149,37 +149,42 @@
             <!-- Properties Grid -->
             <div class="search-page__grid">
                 @foreach ($properties as $property)
-                    @include('components.listing-card', ['property' => $property])
+                    <x-listing-card
+                        :image="$property->main_image?->url ?? 'https://placehold.co/600x400?text=Im%C3%B3vel'"
+                        :title="$property->title"
+                        :location="$property->display_location"
+                        :beds="$property->bedrooms ?? 0"
+                        :cars="$property->garages ?? ($property->parking_spaces ?? 0)"
+                        :baths="$property->bathrooms ?? 0"
+                        :code="$property->code"
+                        :price="$property->formatted_price"
+                    />
                 @endforeach
             </div>
 
             <!-- Pagination -->
             <div class="search-page__pagination">
-                @if ($currentPage > 1)
-                    <a href="{{ route('search.index', ['page' => $currentPage - 1]) }}" class="search-page__pagination-arrow">
+                @if ($properties->currentPage() > 1)
+                    <a href="{{ $properties->previousPageUrl() }}" class="search-page__pagination-arrow">
                         <svg width="10" height="8" viewBox="0 -5 10 30" fill="none">
                             <path d="M9 1L1 9L9 17" stroke="#333" stroke-width="2" stroke-linecap="round"/>
                         </svg>
                     </a>
                 @endif
 
-                @for ($i = 1; $i <= min(5, $totalPages); $i++)
-                    <a href="{{ route('search.index', ['page' => $i]) }}" 
-                       class="search-page__pagination-number {{ $i == $currentPage ? 'search-page__pagination-number--active' : '' }}">
-                        {{ $i }}
-                    </a>
+                @for ($i = 1; $i <= $properties->lastPage(); $i++)
+                    @if ($i === 1 || $i === $properties->lastPage() || abs($i - $properties->currentPage()) <= 2)
+                        <a href="{{ $properties->url($i) }}"
+                           class="search-page__pagination-number {{ $i === $properties->currentPage() ? 'search-page__pagination-number--active' : '' }}">
+                            {{ $i }}
+                        </a>
+                    @elseif ($i === 2 || $i === $properties->lastPage() - 1)
+                        <span class="search-page__pagination-ellipsis">...</span>
+                    @endif
                 @endfor
 
-                @if ($totalPages > 5)
-                    <span class="search-page__pagination-ellipsis">...</span>
-                    <a href="{{ route('search.index', ['page' => $totalPages]) }}" 
-                       class="search-page__pagination-number">
-                        {{ $totalPages }}
-                    </a>
-                @endif
-
-                @if ($currentPage < $totalPages)
-                    <a href="{{ route('search.index', ['page' => $currentPage + 1]) }}" class="search-page__pagination-arrow">
+                @if ($properties->hasMorePages())
+                    <a href="{{ $properties->nextPageUrl() }}" class="search-page__pagination-arrow">
                         <svg width="10" height="18" viewBox="0 0 10 18" fill="none">
                             <path d="M1 1L9 9L1 17" stroke="#333" stroke-width="2" stroke-linecap="round"/>
                         </svg>

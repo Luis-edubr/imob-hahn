@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PropertyLead;
 use Illuminate\Http\Request;
 
 class AnuncieController extends Controller
@@ -13,7 +14,6 @@ class AnuncieController extends Controller
 
     public function store(Request $request)
     {
-        // TODO: Implementar lógica de envio de email/mensagem
         $validated = $request->validate([
             // Dados Pessoais
             'name' => 'required|string|max:255',
@@ -42,6 +42,28 @@ class AnuncieController extends Controller
             
             // Autorização
             'authorization' => 'required|accepted',
+        ]);
+
+        PropertyLead::query()->create([
+            'name' => $validated['name'],
+            'cpf' => $validated['cpf'],
+            'email' => $validated['email'],
+            'phone' => $validated['phone'],
+            'address' => $validated['address'],
+            'zip' => $validated['zip'],
+            'neighborhood' => $validated['neighborhood'],
+            'number' => $validated['number'],
+            'city' => $validated['city'],
+            'state' => strtoupper($validated['state']),
+            'complement' => $validated['complement'] ?? null,
+            'property_type' => $validated['property_type'],
+            'suites' => $validated['suites'] ?? null,
+            'bedrooms' => $validated['bedrooms'] ?? null,
+            'bathrooms' => $validated['bathrooms'] ?? null,
+            'rooms' => $validated['rooms'] ?? null,
+            'garages' => $validated['garages'] ?? null,
+            'bbq' => (bool) ($validated['bbq'] ?? false),
+            'additional_info' => $validated['additional_info'] ?? null,
         ]);
 
         return redirect('/')

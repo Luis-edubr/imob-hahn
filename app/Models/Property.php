@@ -16,6 +16,13 @@ class Property extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public const PROPERTY_TYPE_HOUSE = 'casa';
+    public const PROPERTY_TYPE_APARTMENT = 'apartamento';
+    public const PROPERTY_TYPE_LAND = 'terreno';
+    public const PROPERTY_TYPE_COMMERCIAL = 'comercial';
+    public const PROPERTY_TYPE_RURAL = 'rural';
+    public const PROPERTY_TYPE_OFFICE = 'sala_comercial';
+
     public const STATUS_DRAFT = 'draft';
     public const STATUS_PUBLISHED = 'published';
     public const STATUS_PAUSED = 'paused';
@@ -25,6 +32,38 @@ class Property extends Model
     public const TRANSACTION_SALE = 'sale';
     public const TRANSACTION_RENT = 'rent';
     public const TRANSACTION_SEASON = 'season';
+
+    public static function propertyTypeOptions(): array
+    {
+        return [
+            self::PROPERTY_TYPE_HOUSE => 'Casa',
+            self::PROPERTY_TYPE_APARTMENT => 'Apartamento',
+            self::PROPERTY_TYPE_LAND => 'Terreno',
+            self::PROPERTY_TYPE_COMMERCIAL => 'Comercial',
+            self::PROPERTY_TYPE_RURAL => 'Rural',
+            self::PROPERTY_TYPE_OFFICE => 'Sala Comercial',
+        ];
+    }
+
+    public static function transactionTypeOptions(): array
+    {
+        return [
+            self::TRANSACTION_SALE => 'Venda',
+            self::TRANSACTION_RENT => 'Aluguel',
+            self::TRANSACTION_SEASON => 'Temporada',
+        ];
+    }
+
+    public static function statusOptions(): array
+    {
+        return [
+            self::STATUS_DRAFT => 'Rascunho',
+            self::STATUS_PUBLISHED => 'Publicado',
+            self::STATUS_PAUSED => 'Pausado',
+            self::STATUS_SOLD => 'Vendido',
+            self::STATUS_RENTED => 'Alugado',
+        ];
+    }
 
     protected $fillable = [
         'code',
@@ -233,24 +272,17 @@ class Property extends Model
 
     public function getTransactionLabelAttribute(): string
     {
-        return match ($this->transaction_type) {
-            self::TRANSACTION_SALE => 'Venda',
-            self::TRANSACTION_RENT => 'Aluguel',
-            self::TRANSACTION_SEASON => 'Temporada',
-            default => ucfirst((string) $this->transaction_type),
-        };
+        return self::transactionTypeOptions()[$this->transaction_type] ?? ucfirst((string) $this->transaction_type);
     }
 
     public function getStatusLabelAttribute(): string
     {
-        return match ($this->status) {
-            self::STATUS_DRAFT => 'Rascunho',
-            self::STATUS_PUBLISHED => 'Publicado',
-            self::STATUS_PAUSED => 'Pausado',
-            self::STATUS_SOLD => 'Vendido',
-            self::STATUS_RENTED => 'Alugado',
-            default => ucfirst((string) $this->status),
-        };
+        return self::statusOptions()[$this->status] ?? ucfirst((string) $this->status);
+    }
+
+    public function getPropertyTypeLabelAttribute(): string
+    {
+        return self::propertyTypeOptions()[$this->property_type] ?? ucfirst((string) $this->property_type);
     }
 
     public function formattedPrice(?int $amount = null): string

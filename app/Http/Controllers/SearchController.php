@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Property;
 use Illuminate\Http\Request;
 
 class SearchController extends Controller
@@ -9,34 +10,23 @@ class SearchController extends Controller
     /**
      * Display the search/browse page with property listings.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Hardcoded sample properties for display
-        $properties = [
-            ['id' => 1, 'title' => 'INDUSTRIAL I - BAGÉ', 'address' => 'Rua Doutor Pena', 'bedrooms' => 2, 'bathrooms' => 1, 'garages' => 1, 'code' => 2842],
-            ['id' => 2, 'title' => 'INDUSTRIAL I - BAGÉ', 'address' => 'Rua Doutor Pena', 'bedrooms' => 2, 'bathrooms' => 1, 'garages' => 1, 'code' => 2842],
-            ['id' => 3, 'title' => 'INDUSTRIAL I - BAGÉ', 'address' => 'Rua Doutor Pena', 'bedrooms' => 2, 'bathrooms' => 1, 'garages' => 1, 'code' => 2842],
-            ['id' => 4, 'title' => 'INDUSTRIAL I - BAGÉ', 'address' => 'Rua Doutor Pena', 'bedrooms' => 2, 'bathrooms' => 1, 'garages' => 1, 'code' => 2842],
-            ['id' => 5, 'title' => 'INDUSTRIAL I - BAGÉ', 'address' => 'Rua Doutor Pena', 'bedrooms' => 2, 'bathrooms' => 1, 'garages' => 1, 'code' => 2842],
-            ['id' => 6, 'title' => 'INDUSTRIAL I - BAGÉ', 'address' => 'Rua Doutor Pena', 'bedrooms' => 2, 'bathrooms' => 1, 'garages' => 1, 'code' => 2842],
-            ['id' => 7, 'title' => 'INDUSTRIAL I - BAGÉ', 'address' => 'Rua Doutor Pena', 'bedrooms' => 2, 'bathrooms' => 1, 'garages' => 1, 'code' => 2842],
-            ['id' => 8, 'title' => 'INDUSTRIAL I - BAGÉ', 'address' => 'Rua Doutor Pena', 'bedrooms' => 2, 'bathrooms' => 1, 'garages' => 1, 'code' => 2842],
-            ['id' => 9, 'title' => 'INDUSTRIAL I - BAGÉ', 'address' => 'Rua Doutor Pena', 'bedrooms' => 2, 'bathrooms' => 1, 'garages' => 1, 'code' => 2842],
-            ['id' => 10, 'title' => 'INDUSTRIAL I - BAGÉ', 'address' => 'Rua Doutor Pena', 'bedrooms' => 2, 'bathrooms' => 1, 'garages' => 1, 'code' => 2842],
-            ['id' => 11, 'title' => 'INDUSTRIAL I - BAGÉ', 'address' => 'Rua Doutor Pena', 'bedrooms' => 2, 'bathrooms' => 1, 'garages' => 1, 'code' => 2842],
-            ['id' => 12, 'title' => 'INDUSTRIAL I - BAGÉ', 'address' => 'Rua Doutor Pena', 'bedrooms' => 2, 'bathrooms' => 1, 'garages' => 1, 'code' => 2842],
-        ];
-
-        $currentPage = request('page', 1);
-        $totalCount = 23;
-        $itemsPerPage = 12;
-        $totalPages = ceil($totalCount / $itemsPerPage);
+        $properties = Property::query()
+            ->published()
+            ->with('images')
+            ->when($request->filled('transaction_type'), fn ($query) => $query->where('transaction_type', (string) $request->input('transaction_type')))
+            ->when($request->filled('property_type'), fn ($query) => $query->where('property_type', (string) $request->input('property_type')))
+            ->when($request->filled('city'), fn ($query) => $query->where('city', (string) $request->input('city')))
+            ->when($request->filled('district'), fn ($query) => $query->where('district', (string) $request->input('district')))
+            ->when($request->filled('code'), fn ($query) => $query->where('code', (string) $request->input('code')))
+            ->latest('published_at')
+            ->latest('created_at')
+            ->paginate(12)
+            ->withQueryString();
 
         return view('search', [
             'properties' => $properties,
-            'currentPage' => $currentPage,
-            'totalCount' => $totalCount,
-            'totalPages' => $totalPages,
         ]);
     }
 }
