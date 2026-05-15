@@ -16,5 +16,12 @@ class AdminUserSeeder extends Seeder
                 'password' => '12345678',
             ]
         );
+        User::query()->updateOrCreate(
+            ['email' => 'lidiohendler2021@gmail.com'],
+            [
+                'name' => 'Lidio Hendler',
+                'password' => '12345678',
+            ]
+        );
     }
 }
