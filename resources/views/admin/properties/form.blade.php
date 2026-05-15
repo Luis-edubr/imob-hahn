@@ -179,6 +179,28 @@
                                 <label class="inline-flex items-center gap-2"><input type="checkbox" name="highlight_home" value="1" @checked(old('highlight_home', $property->highlight_home))> Exibir na Home</label>
                                 <label class="inline-flex items-center gap-2"><input type="checkbox" name="active" value="1" @checked(old('active', $property->active ?? true))> Ativo</label>
                             </div>
+
+                            <div class="mt-6 rounded-lg border border-indigo-200 bg-indigo-50 p-4">
+                                <h4 class="text-sm font-semibold text-indigo-900">Vitrine Home</h4>
+                                <p class="mt-1 text-xs text-indigo-800">Limites: até 4 destaques de venda, até 4 destaques de aluguel e 1 barbada da semana.</p>
+
+                                <div class="mt-3 grid grid-cols-1 md:grid-cols-3 gap-3 text-sm text-indigo-900">
+                                    <label class="inline-flex items-center gap-2">
+                                        <input type="checkbox" name="highlight_sale" value="1" @checked(old('highlight_sale', $property->highlight_sale))>
+                                        <span>Destaque de venda (restantes: {{ $highlightSlots['sale_remaining'] }})</span>
+                                    </label>
+
+                                    <label class="inline-flex items-center gap-2">
+                                        <input type="checkbox" name="highlight_rent" value="1" @checked(old('highlight_rent', $property->highlight_rent))>
+                                        <span>Destaque de aluguel (restantes: {{ $highlightSlots['rent_remaining'] }})</span>
+                                    </label>
+
+                                    <label class="inline-flex items-center gap-2">
+                                        <input type="checkbox" name="weekly_deal" value="1" @checked(old('weekly_deal', $property->weekly_deal))>
+                                        <span>Barbada da semana ({{ $highlightSlots['weekly_available'] ? 'vaga disponível' : 'já ocupada' }})</span>
+                                    </label>
+                                </div>
+                            </div>
                         </section>
 
                         <section>

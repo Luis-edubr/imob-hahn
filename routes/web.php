@@ -6,12 +6,11 @@ use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\AnuncieController;
 use App\Http\Controllers\MediaController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/contato', [ContactController::class, 'show'])->name('contact.show');
 Route::post('/contato', [ContactController::class, 'store'])->name('contact.store');

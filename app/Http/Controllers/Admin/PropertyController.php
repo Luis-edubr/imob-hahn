@@ -113,6 +113,11 @@ class PropertyController extends Controller
             'module' => $this->moduleMeta($onlyLands),
             'amenities' => Amenity::query()->active()->orderBy('name')->get(['id', 'name']),
             'mediaAssets' => MediaAsset::query()->latest()->limit(200)->get(),
+            'highlightSlots' => [
+                'sale_remaining' => max(0, 4 - Property::query()->where('highlight_sale', true)->when($property->exists, fn ($query) => $query->whereKeyNot($property->id))->count()),
+                'rent_remaining' => max(0, 4 - Property::query()->where('highlight_rent', true)->when($property->exists, fn ($query) => $query->whereKeyNot($property->id))->count()),
+                'weekly_available' => ! Property::query()->where('weekly_deal', true)->when($property->exists, fn ($query) => $query->whereKeyNot($property->id))->exists(),
+            ],
             'typeOptions' => $onlyLands
                 ? ['terreno' => Property::propertyTypeOptions()['terreno']]
                 : collect(Property::propertyTypeOptions())->except('terreno')->all(),

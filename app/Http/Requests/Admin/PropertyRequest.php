@@ -55,6 +55,9 @@ class PropertyRequest extends FormRequest
             'furnished' => ['boolean'],
             'featured' => ['boolean'],
             'highlight_home' => ['boolean'],
+            'highlight_sale' => ['boolean'],
+            'highlight_rent' => ['boolean'],
+            'weekly_deal' => ['boolean'],
             'active' => ['boolean'],
 
             'postal_code' => ['nullable', 'string', 'max:20'],
@@ -101,6 +104,32 @@ class PropertyRequest extends FormRequest
                 $validator->errors()->add('images', 'Apenas uma imagem pode ser marcada como capa.');
             }
 
+            $propertyId = $this->route('property')?->id;
+            $transactionType = (string) $this->input('transaction_type');
+            $highlightSale = $this->boolean('highlight_sale');
+            $highlightRent = $this->boolean('highlight_rent');
+            $weeklyDeal = $this->boolean('weekly_deal');
+
+            if ($highlightSale && $transactionType !== Property::TRANSACTION_SALE) {
+                $validator->errors()->add('highlight_sale', 'Somente imóveis de venda podem entrar no destaque de venda.');
+            }
+
+            if ($highlightRent && $transactionType !== Property::TRANSACTION_RENT) {
+                $validator->errors()->add('highlight_rent', 'Somente imóveis de aluguel podem entrar no destaque de aluguel.');
+            }
+
+            if ($highlightSale && Property::query()->where('highlight_sale', true)->when($propertyId, fn ($query) => $query->whereKeyNot($propertyId))->count() >= 4) {
+                $validator->errors()->add('highlight_sale', 'O destaque de venda já atingiu o limite de 4 imóveis.');
+            }
+
+            if ($highlightRent && Property::query()->where('highlight_rent', true)->when($propertyId, fn ($query) => $query->whereKeyNot($propertyId))->count() >= 4) {
+                $validator->errors()->add('highlight_rent', 'O destaque de aluguel já atingiu o limite de 4 imóveis.');
+            }
+
+            if ($weeklyDeal && Property::query()->where('weekly_deal', true)->when($propertyId, fn ($query) => $query->whereKeyNot($propertyId))->exists()) {
+                $validator->errors()->add('weekly_deal', 'Já existe uma barbada da semana cadastrada.');
+            }
+
             foreach ($images as $index => $image) {
                 $hasAsset = filled($image['media_asset_id'] ?? null);
                 $hasFile = isset($imageFiles[$index]['file']) && $imageFiles[$index]['file'];
@@ -124,6 +153,9 @@ class PropertyRequest extends FormRequest
             'furnished' => $this->boolean('furnished'),
             'featured' => $this->boolean('featured'),
             'highlight_home' => $this->boolean('highlight_home'),
+            'highlight_sale' => $this->boolean('highlight_sale'),
+            'highlight_rent' => $this->boolean('highlight_rent'),
+            'weekly_deal' => $this->boolean('weekly_deal'),
             'active' => $this->boolean('active'),
         ];
 

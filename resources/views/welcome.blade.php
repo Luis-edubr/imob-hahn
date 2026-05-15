@@ -45,117 +45,76 @@
         <section class="listings-section">
             <h2 class="section-title">DESTAQUES DE VENDA</h2>
             <div class="listings-grid">
-                <x-listing-card 
-                    image="https://www.figma.com/api/mcp/asset/9cc55c21-2025-4882-b3c4-9658da4fe4c0"
-                    title="INDUSTRIAL I - BAGÉ"
-                    location="Rua Doutor Pena"
-                    beds="2"
-                    cars="1"
-                    baths="1"
-                    code="2842"
-                    price="R$ 500.000,00"
-                />
-                <x-listing-card 
-                    image="https://www.figma.com/api/mcp/asset/9cc55c21-2025-4882-b3c4-9658da4fe4c0"
-                    title="INDUSTRIAL I - BAGÉ"
-                    location="Rua Doutor Pena"
-                    beds="2"
-                    cars="1"
-                    baths="1"
-                    code="2842"
-                    price="R$ 500.000,00"
-                />
-                <x-listing-card 
-                    image="https://www.figma.com/api/mcp/asset/9cc55c21-2025-4882-b3c4-9658da4fe4c0"
-                    title="INDUSTRIAL I - BAGÉ"
-                    location="Rua Doutor Pena"
-                    beds="2"
-                    cars="1"
-                    baths="1"
-                    code="2842"
-                    price="R$ 500.000,00"
-                />
-                <x-listing-card 
-                    image="https://www.figma.com/api/mcp/asset/9cc55c21-2025-4882-b3c4-9658da4fe4c0"
-                    title="INDUSTRIAL I - BAGÉ"
-                    location="Rua Doutor Pena"
-                    beds="2"
-                    cars="1"
-                    baths="1"
-                    code="2842"
-                    price="R$ 500.000,00"
-                />
+                @forelse ($saleHighlights as $property)
+                    <x-listing-card
+                        :image="$property->main_image?->url ?? 'https://placehold.co/600x400?text=Im%C3%B3vel'"
+                        :title="$property->title"
+                        :location="$property->display_location"
+                        :beds="$property->bedrooms ?? 0"
+                        :cars="$property->garages ?? ($property->parking_spaces ?? 0)"
+                        :baths="$property->bathrooms ?? 0"
+                        :code="$property->code"
+                        :price="$property->formatted_price"
+                    />
+                @empty
+                    <p>Nenhum destaque de venda cadastrado no momento.</p>
+                @endforelse
             </div>
         </section>
 
         <!-- BARBADA DA SEMANA -->
         <section class="featured-deal">
-            <div class="featured-deal__content">
-                <h2 class="featured-deal__title">BARBADA DA SEMANA</h2>
-                <div class="featured-deal__description">
-                    <p><strong>VENDA</strong></p>
-                    <p><strong>CASA NO CAMPO</strong></p>
+            @if ($weeklyDeal)
+                @php
+                    $weeklyFeatures = collect($weeklyDeal->feature_summary)
+                        ->merge($weeklyDeal->amenities->pluck('name'))
+                        ->unique()
+                        ->take(8);
+                @endphp
+
+                <div class="featured-deal__content">
+                    <h2 class="featured-deal__title">BARBADA DA SEMANA</h2>
+                    <div class="featured-deal__description">
+                        <p><strong>{{ strtoupper($weeklyDeal->transaction_label) }}</strong></p>
+                        <p><strong>{{ strtoupper($weeklyDeal->title) }}</strong></p>
+                    </div>
+                    <ul class="featured-deal__features">
+                        @foreach ($weeklyFeatures as $feature)
+                            <li>{{ $feature }}</li>
+                        @endforeach
+                    </ul>
                 </div>
-                <ul class="featured-deal__features">
-                    <li>2 Banheiros</li>
-                    <li>3 Dormitórios</li>
-                    <li>1 Suíte</li>
-                    <li>1 Sala com lareira</li>
-                    <li>1 Sala de estar</li>
-                    <li>1 Sala de janta</li>
-                    <li>Garagem ampla</li>
-                    <li>Pátio com piscina</li>
-                </ul>
-            </div>
-            <div class="featured-deal__image">
-                <img src="https://www.figma.com/api/mcp/asset/eda60452-83d4-492c-913c-c2a2a1f83782" alt="Casa no Campo">
-            </div>
+                <div class="featured-deal__image">
+                    <img src="{{ $weeklyDeal->main_image?->url ?? 'https://placehold.co/900x600?text=Barbada+da+Semana' }}" alt="{{ $weeklyDeal->title }}">
+                </div>
+            @else
+                <div class="featured-deal__content">
+                    <h2 class="featured-deal__title">BARBADA DA SEMANA</h2>
+                    <div class="featured-deal__description">
+                        <p><strong>SEM DESTAQUE CADASTRADO</strong></p>
+                    </div>
+                </div>
+            @endif
         </section>
 
         <!-- DESTAQUES DE ALUGUÉIS -->
         <section class="listings-section">
             <h2 class="section-title">DESTAQUES DE ALUGUÉIS</h2>
             <div class="listings-grid">
-                <x-listing-card 
-                    image="https://www.figma.com/api/mcp/asset/c63b5e62-92e2-42ef-8c7d-3ae51ce60fa7"
-                    title="INDUSTRIAL I - BAGÉ"
-                    location="Rua Doutor Pena"
-                    beds="2"
-                    cars="1"
-                    baths="1"
-                    code="2842"
-                    price="R$ 800,00"
-                />
-                <x-listing-card 
-                    image="https://www.figma.com/api/mcp/asset/c63b5e62-92e2-42ef-8c7d-3ae51ce60fa7"
-                    title="INDUSTRIAL I - BAGÉ"
-                    location="Rua Doutor Pena"
-                    beds="2"
-                    cars="1"
-                    baths="1"
-                    code="2842"
-                    price="R$ 800,00"
-                />
-                <x-listing-card 
-                    image="https://www.figma.com/api/mcp/asset/c63b5e62-92e2-42ef-8c7d-3ae51ce60fa7"
-                    title="INDUSTRIAL I - BAGÉ"
-                    location="Rua Doutor Pena"
-                    beds="2"
-                    cars="1"
-                    baths="1"
-                    code="2842"
-                    price="R$ 800,00"
-                />
-                <x-listing-card 
-                    image="https://www.figma.com/api/mcp/asset/c63b5e62-92e2-42ef-8c7d-3ae51ce60fa7"
-                    title="INDUSTRIAL I - BAGÉ"
-                    location="Rua Doutor Pena"
-                    beds="2"
-                    cars="1"
-                    baths="1"
-                    code="2842"
-                    price="R$ 800,00"
-                />
+                @forelse ($rentHighlights as $property)
+                    <x-listing-card
+                        :image="$property->main_image?->url ?? 'https://placehold.co/600x400?text=Im%C3%B3vel'"
+                        :title="$property->title"
+                        :location="$property->display_location"
+                        :beds="$property->bedrooms ?? 0"
+                        :cars="$property->garages ?? ($property->parking_spaces ?? 0)"
+                        :baths="$property->bathrooms ?? 0"
+                        :code="$property->code"
+                        :price="$property->formatted_price"
+                    />
+                @empty
+                    <p>Nenhum destaque de aluguel cadastrado no momento.</p>
+                @endforelse
             </div>
         </section>
 

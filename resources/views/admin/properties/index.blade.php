@@ -41,6 +41,7 @@
                                         <th class="px-3 py-3">Tipo</th>
                                         <th class="px-3 py-3">Negócio</th>
                                         <th class="px-3 py-3">Status</th>
+                                        <th class="px-3 py-3">Vitrine</th>
                                         <th class="px-3 py-3">Cidade/UF</th>
                                         <th class="px-3 py-3">Valor</th>
                                         <th class="px-3 py-3 text-right">Ações</th>
@@ -54,6 +55,17 @@
                                             <td class="px-3 py-3">{{ $property->property_type_label }}</td>
                                             <td class="px-3 py-3">{{ $property->transaction_label }}</td>
                                             <td class="px-3 py-3">{{ $property->status_label }}</td>
+                                            <td class="px-3 py-3 text-xs">
+                                                @if ($property->highlight_sale)
+                                                    <span class="inline-flex items-center rounded-full bg-blue-100 px-2 py-1 text-blue-800">Venda</span>
+                                                @endif
+                                                @if ($property->highlight_rent)
+                                                    <span class="inline-flex items-center rounded-full bg-emerald-100 px-2 py-1 text-emerald-800">Aluguel</span>
+                                                @endif
+                                                @if ($property->weekly_deal)
+                                                    <span class="inline-flex items-center rounded-full bg-amber-100 px-2 py-1 text-amber-800">Barbada</span>
+                                                @endif
+                                            </td>
                                             <td class="px-3 py-3">{{ trim(($property->city ?? '-') . ' / ' . ($property->state ?? '-'), ' /') }}</td>
                                             <td class="px-3 py-3">{{ $property->formatted_price }}</td>
                                             <td class="px-3 py-3">
